@@ -60,14 +60,14 @@ func realMain() error {
 	return nil
 }
 
-func healthz(writer http.ResponseWriter, request *http.Request) {
+func healthz(w http.ResponseWriter, request *http.Request) {
 	msg := model.HealthzResponse{
-		Message: "message",
+		Message: "OK",
 	}
 	msg_json, err := json.Marshal(msg)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-	writer.Header().Set("Content-Type", "application/json")
-	writer.Write(msg_json)
+	//w.Header().Set("Content-Type", "application/json")
+	w.Write(msg_json)
 }

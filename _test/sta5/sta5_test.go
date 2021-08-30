@@ -49,7 +49,7 @@ func TestStation5(t *testing.T) {
 		}
 	}()
 
-	want := "{\"message\":\"OK\"}\n"
+	want := "{\"message\":\"OK\"}"
 	got, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		t.Error("エラーが発生しました", err)
