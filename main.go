@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/TechBowl-japan/go-stations/db"
+	"github.com/leonard475192/go-stations/db"
+	"github.com/leonard475192/go-stations/model"
 )
 
 func main() {
@@ -55,4 +58,16 @@ func realMain() error {
 	log.Fatal(http.ListenAndServe(port, mux))
 
 	return nil
+}
+
+func healthz(writer http.ResponseWriter, request *http.Request) {
+	msg := model.HealthzResponse{
+		Message: "message",
+	}
+	msg_json, err := json.Marshal(msg)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Write(msg_json)
 }

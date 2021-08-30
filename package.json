@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "repository": "https://github.com/TechBowl-japan/go-stations.git",
+  "repository": "https://github.com/leonard475192/go-stations.git",
   "author": "Hikaru Terazono (3c1u) <3c1u@tohkani.com>",
   "dependencies": {
     "@techtrain/cli-railway": "0.1.3"

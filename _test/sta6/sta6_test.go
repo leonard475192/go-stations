@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/TechBowl-japan/go-stations/model"
+	"github.com/leonard475192/go-stations/model"
 )
 
 func TestStation6(t *testing.T) {

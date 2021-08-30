@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/TechBowl-japan/go-stations/db"
+	"github.com/leonard475192/go-stations/db"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"

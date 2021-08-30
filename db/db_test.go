@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/TechBowl-japan/go-stations/db"
+	"github.com/leonard475192/go-stations/db"
 	"github.com/mattn/go-sqlite3"
 )
 

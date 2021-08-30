@@ -20,8 +20,8 @@ SQLite| 3.35.* or higher
 |Node.js| 14.*  [ 12.* ,  16.* では動作しません]|
 |Yarn|1.22.*|
 
-バージョンが異なる場合、動作しない場合があります。  
-Node.js, Yarnのインストールがまだの場合は[html-staions](https://github.com/TechBowl-japan/html-stations)を参考にインストールしてください。  
+バージョンが異なる場合、動作しない場合があります。
+Node.js, Yarnのインストールがまだの場合は[html-staions](https://github.com/leonard475192/html-stations)を参考にインストールしてください。
 また、使用PCがWindowsの場合は、WSLを[この記事](https://docs.microsoft.com/ja-jp/windows/wsl/install-win10)を参考にインストールしてください。
 
 ### 「必要なツール」インストール済みの場合
@@ -30,7 +30,7 @@ Node.js, Yarnのインストールがまだの場合は[html-staions](https://gi
 
 ####  `go-stations`リポジトリのFork
 
-画面右上にあるForkより [Go Railway](https://github.com/TechBowl-japan/go-stations)のリポジトリを自分のアカウントにForkしてください。
+画面右上にあるForkより [Go Railway](https://github.com/leonard475192/go-stations)のリポジトリを自分のアカウントにForkしてください。
 
 #### `go-stations`リポジトリのクローン
 
@@ -125,7 +125,7 @@ $ sqlite3 .sqlite3/todo.db < db/schema.sql
 際にうまくいかないことが多いということが報告されています。
 もし上記のようなことが起こった場合には、Terminalなどの画面でSSHによるクローンを試していただき、その上で `yarn install` を実行していただくことで解決することが多いです。もし解決しなかった場合には、運営までお問い合わせいただくか、RailwayのSlackワークスペースにてご質問ください。
 
-## 自分のリポジトリの状態を最新の TechBowl-japan/go-stations と合わせる
+## 自分のリポジトリの状態を最新の leonard475192/go-stations と合わせる
 
 Forkしたリポジトリは、Fork元のリポジトリの状態を自動的に反映してくれません。
 Stationの問題やエラーの修正などがなされておらず、自分で更新をする必要があります。
@@ -136,7 +136,7 @@ Stationの問題やエラーの修正などがなされておらず、自分で�
 ```shell
 # こちらは、自分でクローンした[GitHubユーザー名]/rails-stationsの作業ディレクトリを前提としてコマンドを用意しています。
 # 自分が何か変更した内容があれば、 stash した後に実行してください。
-git remote add upstream git@github.com:TechBowl-japan/go-stations.git
+git remote add upstream git@github.com:leonard475192/go-stations.git
 git fetch upstream
 ```
 
@@ -151,7 +151,7 @@ git branch -a ←このコマンドを実行
   remotes/upstream/main ←こちらのような upstream という文字が含まれた表示の行があれば成功です。
 ```
 
-こちらで自分のリポジトリを TechBowl-japan/go-stations の最新の状態と合わせるための準備は終了です。
+こちらで自分のリポジトリを leonard475192/go-stations の最新の状態と合わせるための準備は終了です。
 
 ### 自分のリポジトリの状態を最新に更新
 
@@ -161,7 +161,7 @@ git branch -a ←このコマンドを実行
 # ↓main ブランチに移動するコマンド
 git checkout main
 
-# ↓ TechBowl-japan/go-stations の最新の状態をオンラインから取得
+# ↓ leonard475192/go-stations の最新の状態をオンラインから取得
 git fetch upstream
 
 # ↓ 最新の状態を自分のリポジトリに入れてローカルの状態も最新へ

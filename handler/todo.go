@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 
-	"github.com/TechBowl-japan/go-stations/model"
-	"github.com/TechBowl-japan/go-stations/service"
+	"github.com/leonard475192/go-stations/model"
+	"github.com/leonard475192/go-stations/service"
 )
 
 // A TODOHandler implements handling REST endpoints.

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/TechBowl-japan/go-stations/db"
+	"github.com/leonard475192/go-stations/db"
 )
 
 func TestStation16(t *testing.T) {

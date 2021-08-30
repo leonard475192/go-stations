@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/TechBowl-japan/go-stations/model"
+	"github.com/leonard475192/go-stations/model"
 )
 
 // A TODOService implements CRUD of TODO entities.
