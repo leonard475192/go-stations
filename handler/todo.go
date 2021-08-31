@@ -21,8 +21,14 @@ func NewTODOHandler(svc *service.TODOService) *TODOHandler {
 
 // Create handles the endpoint that creates the TODO.
 func (h *TODOHandler) Create(ctx context.Context, req *model.CreateTODORequest) (*model.CreateTODOResponse, error) {
-	_, _ = h.svc.CreateTODO(ctx, "test", "test_description")
-	return &model.CreateTODOResponse{}, nil
+	query, err := h.svc.CreateTODO(ctx, req.Subject, req.Description)
+	if err != nil {
+		return &model.CreateTODOResponse{}, err
+	}
+	res := model.CreateTODOResponse{
+		TODO: *query,
+	}
+	return &res, nil
 }
 
 // Read handles the endpoint that reads the TODOs.

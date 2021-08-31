@@ -44,7 +44,9 @@ func (s *TODOService) CreateTODO(ctx context.Context, subject, description strin
 		return nil, err
 	}
 
-	var new_todo model.TODO
+	new_todo := model.TODO{
+		ID: int(new_todo_id),
+	}
 	for result_confirms.Next() {
 		if err := result_confirms.Scan(&new_todo.Subject, &new_todo.Description, &new_todo.CreatedAt, &new_todo.UpdatedAt); err != nil {
 			log.Fatal(err)
