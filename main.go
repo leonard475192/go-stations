@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -61,7 +60,7 @@ func realMain() error {
 	mux := http.NewServeMux()
 
 	// TODO: ここから実装を行う
-	mux.Handle("/healthz", http.HandlerFunc(healthz))
+	mux.Handle("/healthz", handler.NewHealthzHandler())
 	mux.Handle("/todos", http.HandlerFunc(todo))
 	log.Fatal(http.ListenAndServe(port, mux))
 
@@ -98,16 +97,4 @@ func todo(w http.ResponseWriter, r *http.Request) {
 
 		w.Write(res_json)
 	}
-}
-
-func healthz(w http.ResponseWriter, request *http.Request) {
-	msg := model.HealthzResponse{
-		Message: "OK",
-	}
-	msg_json, err := json.Marshal(msg)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(msg_json)
 }
