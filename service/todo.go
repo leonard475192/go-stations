@@ -27,20 +27,20 @@ func (s *TODOService) CreateTODO(ctx context.Context, subject, description strin
 		confirm = `SELECT subject, description, created_at, updated_at FROM todos WHERE id = ?`
 	)
 
+	// TODO ここ聞く
 	result_insert, err := s.db.ExecContext(ctx, insert, subject, description)
 	if err != nil {
-		// log.Fatal(err)
+		log.Printf("Error ExecContext:%v", err)
 		return nil, err
 	}
 	new_todo_id, err := result_insert.LastInsertId()
 	if err != nil {
-		// log.Fatal(err)
+		log.Printf("Error LastInsertId:%v", err)
 		return nil, err
 	}
-
 	result_confirms, err := s.db.QueryContext(ctx, confirm, new_todo_id)
 	if err != nil {
-		// log.Fatal(err)
+		log.Printf("Error QueryContext:%v", err)
 		return nil, err
 	}
 
@@ -49,7 +49,7 @@ func (s *TODOService) CreateTODO(ctx context.Context, subject, description strin
 	}
 	for result_confirms.Next() {
 		if err := result_confirms.Scan(&new_todo.Subject, &new_todo.Description, &new_todo.CreatedAt, &new_todo.UpdatedAt); err != nil {
-			log.Fatal(err)
+			log.Printf("Error Scan:%v", err)
 		}
 	}
 
