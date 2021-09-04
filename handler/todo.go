@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/schema"
 	"github.com/leonard475192/go-stations/model"
 	"github.com/leonard475192/go-stations/service"
 )
@@ -25,6 +26,28 @@ func NewTODOHandler(svc *service.TODOService) *TODOHandler {
 func (h *TODOHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	switch r.Method {
+	case "GET":
+		w.Header().Set("Content-Type", "application/json")
+		if err := r.ParseForm(); err != nil {
+			log.Printf("error ParseForm:%v", err)
+		}
+
+		req := model.ReadTODORequest{}
+		if err := schema.NewDecoder().Decode(&req, r.Form); err != nil {
+			log.Printf("error Decoder:%v", err)
+		}
+
+		res, err := h.Read(ctx, &req)
+		if err != nil {
+			w.WriteHeader(400)
+			log.Print(err)
+		}
+		res_json, err := json.Marshal(res)
+		if err != nil {
+			w.WriteHeader(400)
+			log.Print(err)
+		}
+		w.Write(res_json)
 	case "POST":
 		w.Header().Set("Content-Type", "application/json")
 		var req model.CreateTODORequest
@@ -63,7 +86,6 @@ func (h *TODOHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Print(err)
 		}
 		w.Write(res_json)
-
 	}
 }
 
@@ -81,8 +103,21 @@ func (h *TODOHandler) Create(ctx context.Context, req *model.CreateTODORequest) 
 
 // Read handles the endpoint that reads the TODOs.
 func (h *TODOHandler) Read(ctx context.Context, req *model.ReadTODORequest) (*model.ReadTODOResponse, error) {
-	_, _ = h.svc.ReadTODO(ctx, 0, 0)
-	return &model.ReadTODOResponse{}, nil
+	prevID, size := int64(0), int64(5)
+	if req.PrevID != 0 {
+		prevID = req.PrevID
+	}
+	if req.Size != 0 {
+		size = req.Size
+	}
+	query, err := h.svc.ReadTODO(ctx, prevID, size)
+	if err != nil {
+		return &model.ReadTODOResponse{}, err
+	}
+	res := model.ReadTODOResponse{
+		TODOs: query,
+	}
+	return &res, nil
 }
 
 // Update handles the endpoint that updates the TODO.

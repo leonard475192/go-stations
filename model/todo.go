@@ -24,12 +24,12 @@ type (
 
 	// A ReadTODORequest expresses ...
 	ReadTODORequest struct {
-		PrevID int64 `json:"prev_id"`
-		Size   int64 `json:"size"`
+		PrevID int64 `schema:"prev_id"`
+		Size   int64 `schema:"size"`
 	}
 	// A ReadTODOResponse expresses ...
 	ReadTODOResponse struct {
-		TODOs []TODO `json:"todos"`
+		TODOs []*TODO `json:"todos"`
 	}
 
 	// A UpdateTODORequest expresses ...
