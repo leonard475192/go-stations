@@ -77,7 +77,7 @@ func (s *TODOService) UpdateTODO(ctx context.Context, id int64, subject, descrip
 	prepare_todo, err := s.db.PrepareContext(ctx, update)
 	if err != nil {
 		// log.Printf("Error PrepareContext:%v", err)
-		return nil, err
+		return nil, model.ErrNotFound{}
 	}
 	_, err = prepare_todo.ExecContext(ctx, subject, description, id)
 	if err != nil {
