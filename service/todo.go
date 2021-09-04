@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"database/sql"
-	"log"
 
 	"github.com/leonard475192/go-stations/model"
 )
@@ -30,30 +29,30 @@ func (s *TODOService) CreateTODO(ctx context.Context, subject, description strin
 	// TODO ここ聞く
 	result_insert, err := s.db.ExecContext(ctx, insert, subject, description)
 	if err != nil {
-		log.Printf("Error ExecContext:%v", err)
+		// log.Printf("Error ExecContext:%v", err)
 		return nil, err
 	}
 	new_todo_id, err := result_insert.LastInsertId()
 	if err != nil {
-		log.Printf("Error LastInsertId:%v", err)
+		// log.Printf("Error LastInsertId:%v", err)
 		return nil, err
 	}
-	result_confirms, err := s.db.QueryContext(ctx, confirm, new_todo_id)
+
+	confirm_todo := model.TODO{
+		ID: new_todo_id,
+	}
+	err = s.db.QueryRowContext(ctx, confirm, new_todo_id).Scan(
+		&confirm_todo.Subject,
+		&confirm_todo.Description,
+		&confirm_todo.CreatedAt,
+		&confirm_todo.UpdatedAt,
+	)
 	if err != nil {
-		log.Printf("Error QueryContext:%v", err)
+		// log.Printf("Error QueryContext:%v", err)
 		return nil, err
 	}
 
-	new_todo := model.TODO{
-		ID: int(new_todo_id),
-	}
-	for result_confirms.Next() {
-		if err := result_confirms.Scan(&new_todo.Subject, &new_todo.Description, &new_todo.CreatedAt, &new_todo.UpdatedAt); err != nil {
-			log.Printf("Error Scan:%v", err)
-		}
-	}
-
-	return &new_todo, nil
+	return &confirm_todo, nil
 }
 
 // ReadTODO reads TODOs on DB.
@@ -72,8 +71,34 @@ func (s *TODOService) UpdateTODO(ctx context.Context, id int64, subject, descrip
 		update  = `UPDATE todos SET subject = ?, description = ? WHERE id = ?`
 		confirm = `SELECT subject, description, created_at, updated_at FROM todos WHERE id = ?`
 	)
+	// ここから
+	// TODO を変更する際に利用するメソッドは、PrepareContext メソッドや ExecContext メソッドになり、
+	// 保存するTODOを読み取る際に利用するメソッドは QueryRowContext メソッドを利用すると実装することができます。
+	prepare_todo, err := s.db.PrepareContext(ctx, update)
+	if err != nil {
+		// log.Printf("Error PrepareContext:%v", err)
+		return nil, err
+	}
+	_, err = prepare_todo.ExecContext(ctx, subject, description, id)
+	if err != nil {
+		// log.Printf("Error Update:%v", err)
+		return nil, err
+	}
+	confirm_todo := model.TODO{
+		ID: id,
+	}
+	err = s.db.QueryRowContext(ctx, confirm, id).Scan(
+		&confirm_todo.Subject,
+		&confirm_todo.Description,
+		&confirm_todo.CreatedAt,
+		&confirm_todo.UpdatedAt,
+	)
+	if err != nil {
+		// log.Printf("Error Confirm:%v", err)
+		return nil, err
+	}
 
-	return nil, nil
+	return &confirm_todo, nil
 }
 
 // DeleteTODO deletes TODOs on DB by ids.
