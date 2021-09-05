@@ -25,9 +25,9 @@ func NewTODOHandler(svc *service.TODOService) *TODOHandler {
 
 func (h *TODOHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case "GET":
-		w.Header().Set("Content-Type", "application/json")
 		if err := r.ParseForm(); err != nil {
 			log.Printf("error ParseForm:%v", err)
 		}
@@ -49,7 +49,6 @@ func (h *TODOHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Write(res_json)
 	case "POST":
-		w.Header().Set("Content-Type", "application/json")
 		var req model.CreateTODORequest
 		json.NewDecoder(r.Body).Decode(&req)
 		res, err := h.Create(ctx, &req)
@@ -64,28 +63,51 @@ func (h *TODOHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Write(res_json)
 	case "PUT":
-		w.Header().Set("Content-Type", "application/json")
 		var req model.UpdateTODORequest
 		json.NewDecoder(r.Body).Decode(&req)
 		res, err := h.Update(ctx, &req)
 		// ここ聞く
 		switch err {
+		case nil:
+			res_json, err := json.Marshal(res)
+			if err != nil {
+				w.WriteHeader(400)
+				log.Print(err)
+			}
+			w.Write(res_json)
 		case model.ErrNotFound{}:
 			w.WriteHeader(404)
 			w.Write(nil)
-		case nil:
-
 		default:
 			log.Print(err)
 			w.WriteHeader(400)
 			w.Write(nil)
 		}
-		res_json, err := json.Marshal(res)
-		if err != nil {
+	case "DELETE":
+		var req model.DeleteTODORequest
+		json.NewDecoder(r.Body).Decode(&req)
+		// ここじゃなくて、model.error に ErrEmptyRequest とか作ったほうがきれいな気がしました。
+		if len(req.IDs) == 0 {
 			w.WriteHeader(400)
-			log.Print(err)
+			w.Write(nil)
 		}
-		w.Write(res_json)
+		res, err := h.Delete(ctx, &req)
+		switch err {
+		case nil:
+			res_json, err := json.Marshal(res)
+			if err != nil {
+				w.WriteHeader(400)
+				log.Print(err)
+			}
+			w.Write(res_json)
+		case model.ErrNotFound{}:
+			w.WriteHeader(404)
+			w.Write(nil)
+		default:
+			log.Print(err)
+			w.WriteHeader(400)
+			w.Write(nil)
+		}
 	}
 }
 
@@ -134,6 +156,10 @@ func (h *TODOHandler) Update(ctx context.Context, req *model.UpdateTODORequest) 
 
 // Delete handles the endpoint that deletes the TODOs.
 func (h *TODOHandler) Delete(ctx context.Context, req *model.DeleteTODORequest) (*model.DeleteTODOResponse, error) {
-	_ = h.svc.DeleteTODO(ctx, nil)
-	return &model.DeleteTODOResponse{}, nil
+	err := h.svc.DeleteTODO(ctx, req.IDs)
+	if err != nil {
+		return &model.DeleteTODOResponse{}, err
+	}
+	res := model.DeleteTODOResponse{}
+	return &res, nil
 }
